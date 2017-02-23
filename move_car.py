@@ -1,5 +1,7 @@
 # codeReviewFun
+# Author:
 # Purpose:
+# Python version:
 
 # Variable setup
 directions = ['N','E','S','W']
@@ -8,14 +10,14 @@ commands = {'L': 'turn_left', 'R': 'turn_right', 'M': 'move'}
 
 GRID_MAX_X, GRID_MAX_Y = map(int, raw_input().split()) ### Explain unintuitive code
 
-first_vehicle_x = None ### Group with body code below
+first_vehicle_x = None ### Not needed
 first_vehicle_y = None
 
 class Vehicle():
     def __init__(self, x, y, face):
         self.x = x
         self.y = y
-        self.dir = face
+        self.dir = face ### 'dir' is reserved
 
     def turn_left(self):
         self.dir = directions[(directions.index(self.dir)-1)%len(directions)] ### Separate out into multiple lines
@@ -45,7 +47,7 @@ vehicle_one_commands = raw_input()
 
 vehicle_one = Vehicle(int(vehicle_one_pos[0]), int(vehicle_one_pos[1]), vehicle_one_pos[2])
 for command in vehicle_one_commands:
-    eval("vehicle_one.{0}()".format(commands[command]))
+    eval("vehicle_one.{0}()".format(commands[command])) ### Try to avoid eval() for readability
 
 first_vehicle_x = vehicle_one.x
 first_vehicle_y = vehicle_one.y
@@ -54,7 +56,7 @@ first_vehicle_y = vehicle_one.y
 vehicle_two_pos = raw_input().split() ### Define function rather than duplicating code
 vehicle_two_commands = raw_input()
 
-vehicle_two = Vehicle(int(vehicle_two_pos[0]), int(vehicle_two_pos[1]), vehicle_two_ps[2])
+vehicle_two = Vehicle(int(vehicle_two_pos[0]), int(vehicle_two_pos[1]), vehicle_two_ps[2]) ### Typo 'vehicle_two_ps' -> 'vehicle_two_pos'
 for command in vehicle_two_commands:
     eval("vehicle_two.{0}()".format(commands[command]))
 
