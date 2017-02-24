@@ -1,64 +1,85 @@
-# codeReviewFun
-# Author:
-# Purpose:
-# Python version:
+### move_car.py
+# Author: Caleb Strait
+# Python 3.5.2
+##
 
-# Variable setup
-directions = ['N','E','S','W']
-movement = {'N': (0,1), 'E': (1,0), 'S': (0,-1), 'W':(-1,0)}
-commands = {'L': 'turn_left', 'R': 'turn_right', 'M': 'move'}
+### Description
+# Defines a grid and a class Vehicle, which will have starting point(X, Y on the grid) and direction(one of N,E,S,W)
+# taken from user and there will be commands, L & R turns the vehicle 90 degrees around left and right respectively
+# and M moves the vehicle one unit to faced direction. Vehicles are sent sequentially. If the second vehicle attempts
+# to move to the occupied spot of the first vehicle, the command will be skipped. If any move command makes any of the
+# vehicles move out of the grid, that command will be skipped as well.
+##
 
-GRID_MAX_X, GRID_MAX_Y = map(int, raw_input().split()) ### Explain unintuitive code
+### Expected Inputs
+# The first line defines the limits of the grid; X and Y separated by space
+# The second line defines the current position and facing direction for the first vehicle; X, Y, and facing are separated by space
+# The third line defines the commands for the first vehicle, which is a line of string
+# The fourth and fifth lines are the same as second and third but for the second vehicle
+##
 
-first_vehicle_x = None ### Not needed
-first_vehicle_y = None
+def main(input_list):
+
+    ### Unit testing
+    #*# TO DO #*# test_turn_left
+    #*# TO DO #*# test_turn_right
+    #*# TO DO #*# test_move
+    ##
+
+    ### Variable definitions
+    directions = ['N','E','S','W']
+    movement = {'N': (0,1), 'E': (1,0), 'S': (0,-1), 'W':(-1,0)}
+    grid_max_X, grid_max_Y = map(int, input_list[1].split())
+    commands_vehicle_1 = map(int, input_list[3].split())
+    commands_vehicle_2 = map(int, input_list[5].split())
+    ##
+
+    ### Create vehicles 1 & 2
+    vehicle_1 = initialize_vehicle(map(int, input_list[2].split()))
+    vehicle_2 = initialize_vehicle(map(int, input_list[4].split()))
+    ##
+
+    ### Perform vehicle commands
+    while len(commands_vehicle_1) > 0 && len(commands_vehicle_2) > 0:
+        if len(commands_vehicle_1) > 0:
+            command_vehicle(vehicle_1, commands_vehicle_1[0])
+            commands_vehicle_1 = commands_vehicle_1[1:]
+            print_to_console(vehicle_1, 1)
+        if len(commands_vehicle_2) > 0:
+            command_vehicle(vehicle_2, commands_vehicle_2[0])
+            commands_vehicle_2 = commands_vehicle_2[1:]
+            print_to_console(vehicle_2, 2)
+    ##
+
+def initialize_vehicle(x_pos, y_pos, facing):
+    return Vehicle(x_pos, y_pos, facing)
+
+def command_vehicle(vehicle, command):
+    if command == 'L':
+        vehicle.turn_left()
+    elif command == 'R':
+        vehicle.turn_right()
+    elif command == 'M':
+        vehicle.move()
+    else:
+        raise ValueError('Invalid Command')
+
+def print_to_console(vehicle, vehicle_num):
+    print(vehicle_num + ': x=' + str(vehicle.x) + ' y=' + str(vehicle.y) + ' facing=' + vehicle.facing)
 
 class Vehicle():
-    def __init__(self, x, y, face):
-        self.x = x
-        self.y = y
-        self.dir = face ### 'dir' is reserved
+    def __init__(self, x_pos, y_pos, face):
+        self.x_pos = x_pos
+        self.y_pos = y_pos
+        self.face = face
 
     def turn_left(self):
-        self.dir = directions[(directions.index(self.dir)-1)%len(directions)] ### Separate out into multiple lines
+        self.face = directions[(directions.index(self.face)-1)%len(directions)] #*# TO DO #*# Check
 
     def turn_right(self):
-        self.dir = directions[(directions.index(self.dir)+1)%len(directions)] ### Separate out into multiple lines
+        self.face = directions[(directions.index(self.face)+1)%len(directions)] #*# TO DO #*# Check
 
     def move(self):
-        new_x = self.x + movement[self.dir][0]
-        new_y = self.y + movement[self.dir][1]
-
-        if new_x != first_vehicle_x or new_y != first_vehicle_y: ### Compare new position to each vehicle, not just first
-            if new_x in xrange(GRID_MAX_X+1):
-                self.x = new_x
-            if new_y in xrange(GRID_MAX_Y+1):
-                self.y = new_y
-
-# test_turn_left
-
-# test_turn_right
-
-# test_move
-
-# Request inputs
-vehicle_one_pos = raw_input().split()
-vehicle_one_commands = raw_input()
-
-vehicle_one = Vehicle(int(vehicle_one_pos[0]), int(vehicle_one_pos[1]), vehicle_one_pos[2])
-for command in vehicle_one_commands:
-    eval("vehicle_one.{0}()".format(commands[command])) ### Try to avoid eval() for readability
-
-first_vehicle_x = vehicle_one.x
-first_vehicle_y = vehicle_one.y
-
-
-vehicle_two_pos = raw_input().split() ### Define function rather than duplicating code
-vehicle_two_commands = raw_input()
-
-vehicle_two = Vehicle(int(vehicle_two_pos[0]), int(vehicle_two_pos[1]), vehicle_two_ps[2]) ### Typo 'vehicle_two_ps' -> 'vehicle_two_pos'
-for command in vehicle_two_commands:
-    eval("vehicle_two.{0}()".format(commands[command]))
-
-print vehicle_one.x, vehicle_one.y, vehicle_one.dir ### Create main function and return variables ### Create output function that prints returns from main
-print vehicle_two.x, vehicle_two.y, vehicle_two.dir
+        new_x = self.x_pos + movement[self.face][0] #*# TO DO #*# Check
+        new_y = self.y_pos + movement[self.face][1] #*# TO DO #*# Check
+        #*# TO DO #*# Check for collison with other vehicles or walls
